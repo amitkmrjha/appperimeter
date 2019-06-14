@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "amit.myapp.hostip.grpc";
+option java_outer_classname = "HostIpProto";
+
+package hostip;
+
+service HostIpGrpcService {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+    rpc IpEventClientStream (stream IpEvent) returns (HelloReply) {}
+    rpc IpEventClientServerStream (stream IpEvent) returns (stream HelloReply) {}
+
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}
+
+message IpEvent {
+  string app_sha256 = 1;
+  int64 ip = 2;
+}
