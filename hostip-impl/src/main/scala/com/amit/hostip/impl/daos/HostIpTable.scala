@@ -114,7 +114,7 @@ object AppHostIpTable extends HostIpTable[AppHostIp]{
      CREATE TABLE IF NOT EXISTS ${tableName} (
          ${Columns.Id} timeuuid,
          ${Columns.AppSha256} text,
-         ${Columns.Ip}  int,
+         ${Columns.Ip}  bigint,
          PRIMARY KEY (${primaryKey})
          )
       """.stripMargin

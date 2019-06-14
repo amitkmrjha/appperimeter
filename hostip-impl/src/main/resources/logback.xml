@@ -32,6 +32,7 @@
   <logger name="javax.management.mbeanserver" level="ERROR" />
   <logger name="javax.management.misc" level="ERROR" />
   <logger name="io.netty.buffer" level="ERROR" />
+  <logger name="io.netty.util.internal" level="ERROR" />
 
 
 

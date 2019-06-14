@@ -20,7 +20,7 @@ class HostIpGrpcServiceImpl(handler:HostIpEventHandler,mat: Materializer, system
 
   val consumer = Sink.ignore
   val runnableGraph: RunnableGraph[Sink[IpEvent, NotUsed]] =
-    MergeHub.source[IpEvent](perProducerBufferSize = 16).to(consumer)
+    MergeHub.source[IpEvent](perProducerBufferSize = 200).to(consumer)
 
   val toConsumer: Sink[IpEvent, NotUsed] = runnableGraph.run()
 
