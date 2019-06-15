@@ -160,6 +160,12 @@ object AppHostIpTable extends HostIpTable[AppHostIp]{
     select.toString
   }
 
+  def deleteByAppId (app_sha256: String): String = {
+    val select = QueryBuilder.delete().from(tableName)
+      .where(QueryBuilder.eq(Columns.AppSha256, app_sha256))
+    select.toString
+  }
+
   override protected def tableName: String = ColumnFamilies.AppHostIp
 
   override protected def primaryKey: String = s"${Columns.AppSha256},${Columns.Ip}"

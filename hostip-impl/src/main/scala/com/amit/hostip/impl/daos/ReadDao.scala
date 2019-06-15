@@ -2,6 +2,7 @@ package com.amit.hostip.impl.daos
 
 import java.util.UUID
 
+import akka.Done
 import com.amit.hostip.domain.{AppHostIp, HostIp}
 import com.datastax.driver.core.Row
 import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraSession
@@ -9,7 +10,10 @@ import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraSession
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ReadDao[T <:HostIp] {
+
   def getByAppId(app_sha256: String):Future[Seq[T]]
+
+  def deleteByAppId(app_sha256: String):Future[Done]
 
   protected def convert(r: Row): T
 
@@ -43,6 +47,10 @@ class AppHostIpDao(session: CassandraSession)(implicit ec: ExecutionContext) ext
 
   override protected def convert(r: Row): HostIp = {
     AppHostIp(id(r),app_sha256(r),ip(r))
+  }
+
+  override def deleteByAppId(app_sha256: String): Future[Done] = {
+    session.executeWrite(AppHostIpTable.deleteByAppId(app_sha256))
   }
 }
 

@@ -32,4 +32,11 @@ class HostIpServiceImpl(appHostIpDao:AppHostIpDao)(implicit ec: ExecutionContext
       case ex: Exception => throw BadRequest(s"${ex.getMessage}")
     }
   }
+
+  override def deleteAppHost(app_sha256: String): ServiceCall[NotUsed, String] = ServiceCall { _ =>
+    appHostIpDao.deleteByAppId(app_sha256).map(x => s"App id ${app_sha256} deleted from store"
+    ).recover {
+      case ex: Exception => throw BadRequest(s"${ex.getMessage}")
+    }
+  }
 }

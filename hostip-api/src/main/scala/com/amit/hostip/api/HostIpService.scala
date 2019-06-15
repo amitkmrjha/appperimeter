@@ -20,12 +20,15 @@ trait HostIpService extends Service {
 
   def getAppHost(app_sha256: String): ServiceCall[NotUsed, AppHostResponse]
 
+  def deleteAppHost(app_sha256: String): ServiceCall[NotUsed, String]
+
   override final def descriptor = {
     import Service._
     named("hostip-srvc")
       .withCalls(
         pathCall("/api/hello/:id", hello _),
         restCall(Method.GET, "/event/:app_sha256", getAppHost _),
+        restCall(Method.DELETE, "/event/:app_sha256", deleteAppHost _),
       )
       .withAutoAcl(true)
   }
