@@ -36,14 +36,8 @@ class HostIpGrpcServiceImpl(handler:HostIpEventHandler,mat: Materializer, system
 
   override def ipEventClientStream(in: Source[IpEvent, NotUsed]): Future[HelloReply] = {
     logger.debug(s"sayHello to in stream...")
-    in. via(handler.handle).runWith(Sink.ignore).map(_ => HelloReply("Finished processing ......"))
-   // in.runWith(Sink.seq).map(elements => HelloReply(s"Hello, ${elements.map(_.appSha256).mkString(", ")}"))
-    //in.runWith(toConsumer)
-
-/*   logger.debug(s"ipEventClientStream invoked ......")
-
-    MergeHub.source[IpEvent](perProducerBufferSize = 16).via(handler.handle).runWith(Sink.ignore)
-      .map(_ => HelloReply("Finished processing ......") )*/
+    in.grouped(200).runWith(handler.handle)
+    Future.successful(HelloReply(s"Done Processing"))
   }
 
   override def ipEventClientServerStream(in: Source[IpEvent, NotUsed]): Source[HelloReply, NotUsed] = {

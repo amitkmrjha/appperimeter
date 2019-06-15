@@ -7,6 +7,7 @@ import com.amit.hostip.impl.daos.AppHostIpDao
 import com.lightbend.lagom.scaladsl.api.ServiceCall
 import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 import play.api.Logger
+import play.utils.Reflect.SubClassOf
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -22,13 +23,14 @@ class HostIpServiceImpl(appHostIpDao:AppHostIpDao)(implicit ec: ExecutionContext
   }
 
   override def getAppHost(app_sha256: String): ServiceCall[NotUsed, AppHostResponse] = ServiceCall { _ =>
-    appHostIpDao.getByAppId(app_sha256).map(x =>
+    appHostIpDao.getByAppId(app_sha256).map { x =>
+      val gb = Subnet.getGoodBad(x.map(ip => ip.ip))
       AppHostResponse(
         count = x.size,
-        good_ips= x.map(ip => ip.ip),
-        bad_ips =  Seq.empty[Long]
+        good_ips = gb._1,
+        bad_ips = gb._2
       )
-    ).recover {
+    }.recover {
       case ex: Exception => throw BadRequest(s"${ex.getMessage}")
     }
   }

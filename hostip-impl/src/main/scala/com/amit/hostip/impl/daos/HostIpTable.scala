@@ -50,6 +50,16 @@ trait HostIpTable[T <: HostIp] {
     val bindV = getInsertBindValues(t)
     bindPrepare(insertPromise,bindV).map(x => Some(x))
   }
+
+  def insert(ts:Seq[T])
+            (implicit session: CassandraSession, ec: ExecutionContext):Future[Seq[BoundStatement]] =  {
+    val seqF = ts.map{t=>
+      val bindV = getInsertBindValues(t)
+      bindPrepare(insertPromise,bindV)
+    }
+    Future.sequence(seqF)
+  }
+
   def delete(t:T)
             (implicit session: CassandraSession, ec: ExecutionContext):Future[Option[BoundStatement]] ={
     val bindV = getDeleteBindValues(t)

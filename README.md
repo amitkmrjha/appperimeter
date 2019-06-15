@@ -1,24 +1,26 @@
-This sample application is now maintained at https://github.com/lagom/lagom-samples.
+This sample application is now maintained at https://github.com/amitkmrjha/appperimeter.
 
-# Lagom gRPC Example (Scala)
+# App Perimeter (Scala)
 
-## Guide
+## Getting started
+To get started make sure you have sbt and git installed on your system.
 
-This example is described in the [Lagom gRPC Example (Scala) guide](https://developer.lightbend.com/guides/lagom-scala-grpc-example/)
+### Running: Prerequisites
 
-This Hello World example illustrates using Akka gRPC as the communication mechanism between two Lagom services.  
-Within 30 minutes, you should be able to download and run the example and use this guide to understand how the example is constructed.
+- You will need to cassandra installed and running:
+- create and configure the key space in cassandra as per hostip-impl\src\main\resources\gen-schema.cql
 
-This guide assumes basic knowledge about Akka-gRPC and Lagom but it also tries to make the amount of previous 
-knowledge as small as possible. Feel free to refer to the 
-[Akka-gRPC reference guide](https://developer.lightbend.com/docs/akka-grpc/current/) or the 
-[Lagom documentation](https://www.lagomframework.com/documentation/current/scala/Home.html) for extra details.
+### Running
+
+On another terminal, clone this repo and run the sample app using the command `sbt runAll`:
+
+```
+git clone https://github.com/amitkmrjha/appperimeter.git
+cd appperimeter
+sbt clean
+sbt compile
+
+sbt stage
+```
 
 
-## Sample license
-
-Written in 2018 by Lightbend, Inc.
-
-To the extent possible under law, the author(s) have dedicated all copyright and related
-and neighboring rights to this template to the public domain worldwide.
-This template is distributed without any warranty. See <http://creativecommons.org/publicdomain/zero/1.0/>.
