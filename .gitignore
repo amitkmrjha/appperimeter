@@ -20,7 +20,5 @@ logs
 .metals
 .vscode
 
-*.bat
-
 *.iml
 logs
