@@ -8,6 +8,8 @@ import amit.myapp.hostip.grpc.{AbstractHostIpGrpcServiceRouter, HelloReply, Hell
 import play.api.Logger
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
+
 
 class HostIpGrpcServiceImpl(handler:HostIpEventHandler,mat: Materializer, system: ActorSystem)
   extends AbstractHostIpGrpcServiceRouter(mat, system) {
@@ -18,10 +20,8 @@ class HostIpGrpcServiceImpl(handler:HostIpEventHandler,mat: Materializer, system
   implicit val ec = mat.executionContext
   implicit  val materializer = mat
 
-  val consumer = Sink.ignore
   val runnableGraph: RunnableGraph[Sink[IpEvent, NotUsed]] =
-    MergeHub.source[IpEvent](perProducerBufferSize = 200).to(consumer)
-
+    MergeHub.source[IpEvent](perProducerBufferSize = 16).groupedWithin(200,20.milli).to(handler.handle)
   val toConsumer: Sink[IpEvent, NotUsed] = runnableGraph.run()
 
 
@@ -35,8 +35,11 @@ class HostIpGrpcServiceImpl(handler:HostIpEventHandler,mat: Materializer, system
     Future.successful(HelloReply(s"Hi ${in.name}! (gRPC)"))
 
   override def ipEventClientStream(in: Source[IpEvent, NotUsed]): Future[HelloReply] = {
+
+
     logger.debug(s"sayHello to in stream...")
     in.grouped(200).runWith(handler.handle)
+    //in.runWith(toConsumer)
     Future.successful(HelloReply(s"Done Processing"))
   }
 
